@@ -56,13 +56,30 @@ export const solutionService = {
     try {
       const fileExt = file.name.split('.').pop()
       const fileName = `${Date.now()}.${fileExt}`
-      const filePath = `solutions-images/${fileName}`
+      const filePath = fileName
 
       console.log('Uploading image to:', filePath)
 
-      // FÖR NU: Hoppa över bilduppladdning pga RLS
-      console.log('Skipping image upload due to RLS policy - please fix in Supabase')
-      return ''
+      const { data: uploadData, error: uploadError } = await supabaseClient.storage
+        .from('solutions-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+        })
+
+      if (uploadError) {
+        console.log('storageError', uploadError)
+        throw uploadError
+      }
+
+      console.log('storageUploadData', uploadData)
+
+      const { data: publicData } = supabaseClient.storage
+        .from('solutions-images')
+        .getPublicUrl(filePath)
+
+      console.log('publicUrlData', publicData)
+      return publicData.publicUrl
     } catch (error) {
       console.error('Full upload error:', error)
       throw error
@@ -83,7 +100,11 @@ export const solutionService = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.log('dbError', error)
+      console.log('dbPayload', solution)
+      throw error
+    }
     return data
   },
 
