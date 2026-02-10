@@ -106,9 +106,8 @@ function App() {
       await solutionService.createSolution({
         title: data.title,
         subject: data.subject,
-        type: data.type,
-        content: `# ${data.title}\n\n## Ämne: ${data.subject}\n## Kategori: ${data.category}\n## Kapitel: ${data.chapter}\n## Typ: ${data.type}\n\n${data.tags.length > 0 ? `**Taggar:** ${data.tags.join(', ')}\n\n` : ''}Lösning kommer snart...`,
-        tags: data.tags,
+        category: data.category,
+        chapter: data.chapter,
         image_url: imageUrl
       });
 

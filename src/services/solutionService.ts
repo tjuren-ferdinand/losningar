@@ -1,4 +1,4 @@
-import { supabaseClient, supabaseStorageClient, Solution } from '../lib/supabaseClient'
+import { supabaseClient, Solution } from '../lib/supabaseClient'
 
 export const solutionService = {
   // Hämta alla lösningar
@@ -19,13 +19,13 @@ export const solutionService = {
       .select('*')
       .order('created_at', { ascending: false })
 
-    // Om query är en siffra, sök på id
+    // Om query är en siffra, sök på id (numeriskt) eller titel
     if (/^\d+$/.test(query)) {
-      supabaseQuery = supabaseQuery.or(`id.ilike.%${query}%,title.ilike.%${query}%`)
+      supabaseQuery = supabaseQuery.or(`id.eq.${Number(query)},title.ilike.%${query}%`)
     } else {
-      // Annars sök på titel, tags och subject
+      // Annars sök på titel/kategori/kapitel/ämne
       supabaseQuery = supabaseQuery.or(
-        `title.ilike.%${query}%,tags.cs.{${query}},subject.ilike.%${query}%`
+        `title.ilike.%${query}%,category.ilike.%${query}%,chapter.ilike.%${query}%,subject.ilike.%${query}%`
       )
     }
 
@@ -63,27 +63,6 @@ export const solutionService = {
       // FÖR NU: Hoppa över bilduppladdning pga RLS
       console.log('Skipping image upload due to RLS policy - please fix in Supabase')
       return ''
-
-      /* eslint-disable-next-line no-unreachable */
-      const { error: uploadError } = await supabaseStorageClient.storage
-        .from('solutions-images')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false
-        })
-
-      if (uploadError) {
-        console.error('Storage upload error:', uploadError)
-        throw uploadError
-      }
-
-      // Hämta publika URL
-      const { data: { publicUrl } } = supabaseStorageClient.storage
-        .from('solutions-images')
-        .getPublicUrl(filePath)
-
-      console.log('Image uploaded successfully:', publicUrl)
-      return publicUrl
     } catch (error) {
       console.error('Full upload error:', error)
       throw error
@@ -94,9 +73,8 @@ export const solutionService = {
   async createSolution(solution: {
     title: string
     subject: string
-    type: string
-    content: string
-    tags: string[]
+    category: string
+    chapter: string
     image_url?: string
   }): Promise<Solution> {
     const { data, error } = await supabaseClient
@@ -127,10 +105,10 @@ export const solutionService = {
     // Sökfråga
     if (query) {
       if (/^\d+$/.test(query)) {
-        supabaseQuery = supabaseQuery.or(`id.ilike.%${query}%,title.ilike.%${query}%`)
+        supabaseQuery = supabaseQuery.or(`id.eq.${Number(query)},title.ilike.%${query}%`)
       } else {
         supabaseQuery = supabaseQuery.or(
-          `title.ilike.%${query}%,tags.cs.{${query}},subject.ilike.%${query}%`
+          `title.ilike.%${query}%,category.ilike.%${query}%,chapter.ilike.%${query}%,subject.ilike.%${query}%`
         )
       }
     }

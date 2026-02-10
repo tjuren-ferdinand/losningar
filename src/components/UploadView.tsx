@@ -8,13 +8,11 @@ interface UploadViewProps {
 }
 
 interface UploadData {
-  image: File;
+  image?: File;
   title: string;
   subject: string;
   category: string;
   chapter: string;
-  type: string;
-  tags: string[];
 }
 
 const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
@@ -24,8 +22,6 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
   const [subject, setSubject] = useState<'Physics' | 'Mathematics'>('Mathematics');
   const [category, setCategory] = useState('');
   const [chapter, setChapter] = useState('');
-  const [type, setType] = useState('Bok-uppgifter');
-  const [tags, setTags] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string>('');
 
@@ -74,17 +70,25 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
       return;
     }
 
+    if (!category) {
+      setError('Kategori är obligatoriskt');
+      return;
+    }
+
+    if (!chapter) {
+      setError('Kapitel är obligatoriskt');
+      return;
+    }
+
     setIsUploading(true);
     
     try {
       const uploadData: UploadData = {
-        image: image || new File([''], 'dummy.jpg', { type: 'image/jpeg' }),
+        ...(image ? { image } : {}),
         title,
         subject,
         category,
         chapter,
-        type,
-        tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
       };
 
       await onUpload(uploadData);
@@ -236,32 +240,6 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
           </div>
         )}
 
-        {/* Type */}
-        <div>
-          <label className="block text-sm font-light text-text-secondary mb-3 tracking-wide">Typ</label>
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            className="w-full px-6 py-4 bg-white/30 backdrop-blur-xl border border-border/50 rounded-2xl focus:outline-none focus:bg-white/40 transition-all font-light tracking-wide"
-          >
-            <option value="Bok-uppgifter">Bok-uppgifter</option>
-            <option value="Tenta-uppgifter">Tenta-uppgifter</option>
-            <option value="General Notes">General Notes</option>
-          </select>
-        </div>
-
-        {/* Tags */}
-        <div>
-          <label className="block text-sm font-light text-text-secondary mb-3 tracking-wide">Taggar</label>
-          <input
-            type="text"
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
-            placeholder="derivata, polynom, analys"
-            className="w-full px-6 py-4 bg-white/30 backdrop-blur-xl border border-border/50 rounded-2xl focus:outline-none focus:bg-white/40 transition-all font-light tracking-wide"
-          />
-        </div>
-
         {/* Error Display */}
         {error && (
           <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-2xl text-red-600 text-sm font-light">
@@ -281,7 +259,7 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
             </button>
             <button
               type="submit"
-              disabled={!image || !title || isUploading}
+              disabled={!title || !category || !chapter || isUploading}
               className="flex-1 px-8 py-4 bg-text text-white rounded-2xl font-light hover:bg-text/90 transition-all tracking-wide disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
             >
               {isUploading ? (
