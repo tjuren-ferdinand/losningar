@@ -27,11 +27,13 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
   const [type, setType] = useState('Bok-uppgifter');
   const [tags, setTags] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState<string>('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageCapture = (file: File) => {
     setImage(file);
+    setError(''); // Rensa felmeddelanden
     const reader = new FileReader();
     reader.onload = (e) => {
       setPreview(e.target?.result as string);
@@ -65,25 +67,33 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!image || !title) return;
+    setError('');
+    
+    if (!title) {
+      setError('Titel är obligatoriskt');
+      return;
+    }
 
     setIsUploading(true);
     
-    const uploadData: UploadData = {
-      image,
-      title,
-      subject,
-      category,
-      chapter,
-      type,
-      tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
-    };
+    try {
+      const uploadData: UploadData = {
+        image: image || new File([''], 'dummy.jpg', { type: 'image/jpeg' }),
+        title,
+        subject,
+        category,
+        chapter,
+        type,
+        tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
+      };
 
-    setTimeout(() => {
-      onUpload(uploadData);
+      await onUpload(uploadData);
+    } catch (error) {
+      console.error('Upload error:', error);
+      setError('Kunde inte ladda upp lösningen. Försök igen.');
+    } finally {
       setIsUploading(false);
-      onClose();
-    }, 2000);
+    }
   };
 
   const availableCategories = courseStructure.filter(cat => cat.subject === subject);
@@ -251,6 +261,13 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
             className="w-full px-6 py-4 bg-white/30 backdrop-blur-xl border border-border/50 rounded-2xl focus:outline-none focus:bg-white/40 transition-all font-light tracking-wide"
           />
         </div>
+
+        {/* Error Display */}
+        {error && (
+          <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-2xl text-red-600 text-sm font-light">
+            {error}
+          </div>
+        )}
 
         {/* Submit */}
         <div className="sticky bottom-0 bg-white/40 backdrop-blur-xl -m-12 p-12 mt-8 rounded-b-3xl">

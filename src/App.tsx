@@ -94,7 +94,12 @@ function App() {
       
       // Ladda upp bild om det finns en
       if (data.image) {
-        imageUrl = await solutionService.uploadImage(data.image);
+        try {
+          imageUrl = await solutionService.uploadImage(data.image);
+        } catch (error) {
+          console.error('Image upload failed, continuing without image:', error);
+          // Fortsätt utan bild om uppladdningen misslyckas
+        }
       }
 
       // Skapa lösning i databasen
@@ -110,6 +115,7 @@ function App() {
       console.log('Solution uploaded successfully!');
     } catch (error) {
       console.error('Error uploading solution:', error);
+      throw error; // Kasta felet vidare så användaren ser det
     }
   };
 

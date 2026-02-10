@@ -53,22 +53,36 @@ export const solutionService = {
 
   // Ladda upp bild till storage
   async uploadImage(file: File): Promise<string> {
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${Date.now()}.${fileExt}`
-    const filePath = `solutions-images/${fileName}`
+    try {
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${Date.now()}.${fileExt}`
+      const filePath = `solutions-images/${fileName}`
 
-    const { error: uploadError } = await supabaseClient.storage
-      .from('solutions-images')
-      .upload(filePath, file)
+      console.log('Uploading image to:', filePath)
 
-    if (uploadError) throw uploadError
+      const { error: uploadError } = await supabaseClient.storage
+        .from('solutions-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        })
 
-    // Hämta publika URL
-    const { data: { publicUrl } } = supabaseClient.storage
-      .from('solutions-images')
-      .getPublicUrl(filePath)
+      if (uploadError) {
+        console.error('Storage upload error:', uploadError)
+        throw uploadError
+      }
 
-    return publicUrl
+      // Hämta publika URL
+      const { data: { publicUrl } } = supabaseClient.storage
+        .from('solutions-images')
+        .getPublicUrl(filePath)
+
+      console.log('Image uploaded successfully:', publicUrl)
+      return publicUrl
+    } catch (error) {
+      console.error('Full upload error:', error)
+      throw error
+    }
   },
 
   // Skapa ny lösning

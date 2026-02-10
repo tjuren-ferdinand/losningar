@@ -61,6 +61,10 @@
     @apply text-text font-medium;
   }
   
+  .vision-nav-item:hover {
+    @apply text-text;
+  }
+  
   .vision-title {
     @apply text-3xl font-light text-text mb-2;
     letter-spacing: 0.15em;
