@@ -11,6 +11,8 @@ interface SolutionModalProps {
 const SolutionModal: React.FC<SolutionModalProps> = ({ solution, isOpen, onClose }) => {
   if (!isOpen || !solution) return null;
 
+  const isPdf = typeof solution.image_url === 'string' && solution.image_url.toLowerCase().includes('.pdf')
+
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-xl flex items-center justify-center z-50 p-4">
       <div className="vision-window p-12 max-w-4xl w-full max-h-[90vh] overflow-auto animate-scale-in">
@@ -40,11 +42,22 @@ const SolutionModal: React.FC<SolutionModalProps> = ({ solution, isOpen, onClose
         </div>
         {solution.image_url && (
           <div className="mt-8">
-            <img
-              src={solution.image_url}
-              alt={solution.title}
-              className="w-full max-h-[60vh] object-contain rounded-2xl"
-            />
+            {isPdf ? (
+              <a
+                href={solution.image_url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center px-8 py-4 bg-text text-white rounded-2xl font-light hover:bg-text/90 transition-all tracking-wide"
+              >
+                Öppna PDF
+              </a>
+            ) : (
+              <img
+                src={solution.image_url}
+                alt={solution.title}
+                className="w-full max-h-[60vh] object-contain rounded-2xl"
+              />
+            )}
           </div>
         )}
       </div>

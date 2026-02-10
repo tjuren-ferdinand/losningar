@@ -18,6 +18,7 @@ interface UploadData {
 const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>('');
+  const [selectedFileName, setSelectedFileName] = useState<string>('');
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState<'Physics' | 'Mathematics'>('Mathematics');
   const [category, setCategory] = useState('');
@@ -30,11 +31,17 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
   const handleImageCapture = (file: File) => {
     setImage(file);
     setError(''); // Rensa felmeddelanden
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreview(e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
+    setSelectedFileName(file.name);
+
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreview('');
+    }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,7 +126,7 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
       <form onSubmit={handleSubmit} className="space-y-8 pt-4">
         {/* Image Upload */}
         <div>
-          <label className="block text-sm font-light text-text-secondary mb-4 tracking-wide">Bild</label>
+          <label className="block text-sm font-light text-text-secondary mb-4 tracking-wide">Fil</label>
           <div className="grid grid-cols-2 gap-4">
             <button
               type="button"
@@ -143,7 +150,7 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
+            accept="image/*,application/pdf"
             onChange={handleFileSelect}
             className="hidden"
           />
@@ -160,8 +167,28 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
                 onClick={() => {
                   setImage(null);
                   setPreview('');
+                  setSelectedFileName('');
                 }}
                 className="absolute top-3 right-3 p-2 bg-white/60 backdrop-blur-sm text-text rounded-full hover:bg-white/80 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          {!preview && selectedFileName && (
+            <div className="mt-6 relative">
+              <div className="w-full px-6 py-4 bg-white/30 backdrop-blur-xl border border-border/50 rounded-2xl text-sm font-light text-text-secondary tracking-wide">
+                {selectedFileName}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setImage(null);
+                  setPreview('');
+                  setSelectedFileName('');
+                }}
+                className="absolute top-1/2 -translate-y-1/2 right-3 p-2 bg-white/60 backdrop-blur-sm text-text rounded-full hover:bg-white/80 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>

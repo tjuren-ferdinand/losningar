@@ -56,7 +56,7 @@ export const solutionService = {
   // Ladda upp bild till storage
   async uploadImage(file: File): Promise<string> {
     try {
-      const fileExt = file.name.split('.').pop()
+      const fileExt = (file.name.split('.').pop() || '').toLowerCase() || (file.type === 'application/pdf' ? 'pdf' : 'bin')
       const fileName = `${Date.now()}.${fileExt}`
       const filePath = fileName
 
@@ -66,6 +66,7 @@ export const solutionService = {
         .from('solutions-images')
         .upload(filePath, file, {
           cacheControl: '3600',
+          contentType: file.type || undefined,
           upsert: false,
         })
 
