@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Camera, Upload, X, Check } from 'lucide-react';
-import { courseStructure, getChaptersBySubject } from '../data/courseStructure';
+import { courseStructure } from '../data/courseStructure';
 
 interface UploadViewProps {
   onClose: () => void;
@@ -101,7 +101,8 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
   };
 
   const availableCategories = courseStructure.filter(cat => cat.subject === subject);
-  const availableChapters = getChaptersBySubject(subject);
+  const selectedCategory = availableCategories.find(cat => cat.name === category);
+  const availableChapters = selectedCategory?.chapters || [];
 
   return (
     <div className="vision-window p-12 max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-scale-in">
@@ -223,14 +224,18 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
         {/* Chapter */}
         {category && (
           <div>
-            <label className="block text-sm font-light text-text-secondary mb-3 tracking-wide">Kapitel</label>
+            <label className="block text-sm font-light text-text-secondary mb-3 tracking-wide">
+              {subject === 'Physics' && category === 'Gamla Tentor/Duggor' ? 'Dugga/Tenta' : 'Kapitel'}
+            </label>
             <select
               value={chapter}
               onChange={(e) => setChapter(e.target.value)}
               className="w-full px-6 py-4 bg-white/30 backdrop-blur-xl border border-border/50 rounded-2xl focus:outline-none focus:bg-white/40 transition-all font-light tracking-wide"
               required
             >
-              <option value="">Välj kapitel</option>
+              <option value="">
+                {subject === 'Physics' && category === 'Gamla Tentor/Duggor' ? 'Välj datum' : 'Välj kapitel'}
+              </option>
               {availableChapters.map((chap: any) => (
                 <option key={chap} value={chap}>
                   {chap}

@@ -19,9 +19,11 @@ export const solutionService = {
       .select('*')
       .order('created_at', { ascending: false })
 
-    // Om query är en siffra, sök på id (numeriskt) eller titel
+    // Om query är en siffra, sök på id (numeriskt) och även textfält (årtal/datum etc.)
     if (/^\d+$/.test(query)) {
-      supabaseQuery = supabaseQuery.or(`id.eq.${Number(query)},title.ilike.%${query}%`)
+      supabaseQuery = supabaseQuery.or(
+        `id.eq.${Number(query)},title.ilike.%${query}%,category.ilike.%${query}%,chapter.ilike.%${query}%,subject.ilike.%${query}%`
+      )
     } else {
       // Annars sök på titel/kategori/kapitel/ämne
       supabaseQuery = supabaseQuery.or(
@@ -126,7 +128,9 @@ export const solutionService = {
     // Sökfråga
     if (query) {
       if (/^\d+$/.test(query)) {
-        supabaseQuery = supabaseQuery.or(`id.eq.${Number(query)},title.ilike.%${query}%`)
+        supabaseQuery = supabaseQuery.or(
+          `id.eq.${Number(query)},title.ilike.%${query}%,category.ilike.%${query}%,chapter.ilike.%${query}%,subject.ilike.%${query}%`
+        )
       } else {
         supabaseQuery = supabaseQuery.or(
           `title.ilike.%${query}%,category.ilike.%${query}%,chapter.ilike.%${query}%,subject.ilike.%${query}%`
