@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Camera, Upload, X, Check } from 'lucide-react';
-import { allCategories } from '../data/categories';
+import { courseStructure, getChaptersBySubject } from '../data/courseStructure';
 
 interface UploadViewProps {
   onClose: () => void;
@@ -86,7 +86,8 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
     }, 2000);
   };
 
-  const availableCategories = allCategories.filter(cat => cat.subject === subject);
+  const availableCategories = courseStructure.filter(cat => cat.subject === subject);
+  const availableChapters = getChaptersBySubject(subject);
 
   return (
     <div className="vision-window p-12 max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-scale-in">
@@ -196,7 +197,7 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
               required
             >
               <option value="">Välj kategori</option>
-              {availableCategories.map((cat) => (
+              {availableCategories.map((cat: any) => (
                 <option key={cat.name} value={cat.name}>
                   {cat.name}
                 </option>
@@ -216,13 +217,11 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
               required
             >
               <option value="">Välj kapitel</option>
-              {availableCategories
-                .find(cat => cat.name === category)
-                ?.chapters.map((chap) => (
-                  <option key={chap} value={chap}>
-                    {chap}
-                  </option>
-                ))}
+              {availableChapters.map((chap: any) => (
+                <option key={chap} value={chap}>
+                  {chap}
+                </option>
+              ))}
             </select>
           </div>
         )}

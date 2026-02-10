@@ -5,7 +5,7 @@ import VisionNav from './components/VisionNav';
 import SolutionModal from './components/SolutionModal';
 import UploadView from './components/UploadView';
 import { solutionService } from './services/solutionService';
-import { supabase, Solution } from './lib/supabase';
+import { supabaseClient, Solution } from './lib/supabaseClient';
 import { Plus } from 'lucide-react';
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
   const [selectedSolution, setSelectedSolution] = useState<Solution | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
-  const [solutions, setSolutions] = useState<Solution[]>([]);
+  const [_solutions, setSolutions] = useState<Solution[]>([]);
   const [filteredSolutions, setFilteredSolutions] = useState<Solution[]>([]);
   const [activeSubject, setActiveSubject] = useState<string | null>('Alla');
   const [showResults, setShowResults] = useState(false);
@@ -27,7 +27,7 @@ function App() {
   // Real-time subscription
   useEffect(() => {
     const setupSubscription = async () => {
-      const subscription = supabase
+      const subscription = supabaseClient
         .channel('solutions')
         .on('postgres_changes', 
           { event: '*', schema: 'public', table: 'solutions' },

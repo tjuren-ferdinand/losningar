@@ -1,5 +1,5 @@
 import React from 'react';
-import { Solution } from '../lib/supabase';
+import { Solution } from '../lib/supabaseClient';
 
 interface VisionResultsProps {
   solutions: Solution[];

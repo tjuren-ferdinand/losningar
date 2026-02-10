@@ -1,5 +1,5 @@
 import React from 'react';
-import { Solution } from '../lib/supabase';
+import { Solution } from '../lib/supabaseClient';
 import { X } from 'lucide-react';
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';

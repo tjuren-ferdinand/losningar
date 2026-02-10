@@ -1,9 +1,9 @@
-import { supabase, Solution } from '../lib/supabase'
+import { supabaseClient, Solution } from '../lib/supabaseClient'
 
 export const solutionService = {
   // Hämta alla lösningar
   async getAllSolutions(): Promise<Solution[]> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('solutions')
       .select('*')
       .order('created_at', { ascending: false })
@@ -14,7 +14,7 @@ export const solutionService = {
 
   // Hämta lösningar baserat på sökfråga
   async searchSolutions(query: string): Promise<Solution[]> {
-    let supabaseQuery = supabase
+    let supabaseQuery = supabaseClient
       .from('solutions')
       .select('*')
       .order('created_at', { ascending: false })
@@ -41,7 +41,7 @@ export const solutionService = {
       return this.getAllSolutions()
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('solutions')
       .select('*')
       .eq('subject', subject === 'Matematik' ? 'Mathematics' : 'Physics')
@@ -57,14 +57,14 @@ export const solutionService = {
     const fileName = `${Date.now()}.${fileExt}`
     const filePath = `solutions-images/${fileName}`
 
-    const { error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabaseClient.storage
       .from('solutions-images')
       .upload(filePath, file)
 
     if (uploadError) throw uploadError
 
     // Hämta publika URL
-    const { data: { publicUrl } } = supabase.storage
+    const { data: { publicUrl } } = supabaseClient.storage
       .from('solutions-images')
       .getPublicUrl(filePath)
 
@@ -80,7 +80,7 @@ export const solutionService = {
     tags: string[]
     image_url?: string
   }): Promise<Solution> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('solutions')
       .insert([solution])
       .select()
@@ -92,7 +92,7 @@ export const solutionService = {
 
   // Kombinerad sök och filtrering
   async getSolutions(query: string = '', subject: string | null = null): Promise<Solution[]> {
-    let supabaseQuery = supabase
+    let supabaseQuery = supabaseClient
       .from('solutions')
       .select('*')
       .order('created_at', { ascending: false })
