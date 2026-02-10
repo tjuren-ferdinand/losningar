@@ -1,4 +1,4 @@
-import { supabaseClient, Solution } from '../lib/supabaseClient'
+import { supabaseClient, supabaseStorageClient, Solution } from '../lib/supabaseClient'
 
 export const solutionService = {
   // Hämta alla lösningar
@@ -60,7 +60,7 @@ export const solutionService = {
 
       console.log('Uploading image to:', filePath)
 
-      const { error: uploadError } = await supabaseClient.storage
+      const { error: uploadError } = await supabaseStorageClient.storage
         .from('solutions-images')
         .upload(filePath, file, {
           cacheControl: '3600',
@@ -73,7 +73,7 @@ export const solutionService = {
       }
 
       // Hämta publika URL
-      const { data: { publicUrl } } = supabaseClient.storage
+      const { data: { publicUrl } } = supabaseStorageClient.storage
         .from('solutions-images')
         .getPublicUrl(filePath)
 
