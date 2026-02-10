@@ -51,6 +51,7 @@
            border border-border/50;
     z-index: 60;
     pointer-events: auto;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
   }
   
   .vision-nav-item {
