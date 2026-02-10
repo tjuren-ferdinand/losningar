@@ -1,13 +1,88 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap');
+
+@layer base {
+  body {
+    @apply font-sans antialiased;
+    background: linear-gradient(135deg, 
+      rgba(250, 250, 252, 1) 0%, 
+      rgba(248, 249, 251, 1) 35%, 
+      rgba(246, 248, 250, 1) 70%,
+      rgba(244, 247, 250, 1) 100%);
+    min-height: 100vh;
+  }
+  
+  * {
+    @apply border-border;
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer components {
+  .vision-search {
+    @apply w-full max-w-3xl px-8 py-6 bg-white/30 backdrop-blur-xl 
+           rounded-3xl text-xl font-light text-text placeholder:text-text-tertiary
+           focus:outline-none focus:bg-white/40 transition-all duration-300
+           shadow-vision hover:shadow-vision-hover;
+    letter-spacing: 0.05em;
+  }
+  
+  .vision-window {
+    @apply bg-white/40 backdrop-blur-2xl rounded-3xl shadow-vision-subtle
+           hover:shadow-vision transition-all duration-500 hover:scale-[1.02];
+  }
+  
+  .vision-result {
+    @apply vision-window p-8 cursor-pointer;
+  }
+  
+  .vision-button {
+    @apply w-14 h-14 bg-white/40 backdrop-blur-xl rounded-full 
+           flex items-center justify-center shadow-vision-subtle
+           hover:bg-white/60 hover:shadow-vision transition-all duration-300
+           hover:scale-110;
+  }
+  
+  .vision-nav {
+    @apply fixed bottom-8 left-1/2 -translate-x-1/2 bg-white/40 backdrop-blur-2xl 
+           rounded-full shadow-vision px-8 py-4 flex items-center gap-8
+           border border-border/50;
+  }
+  
+  .vision-nav-item {
+    @apply text-sm font-light text-text-secondary hover:text-text
+           transition-colors duration-200 cursor-pointer;
+    letter-spacing: 0.05em;
+  }
+  
+  .vision-nav-item.active {
+    @apply text-text font-medium;
+  }
+  
+  .vision-title {
+    @apply text-3xl font-light text-text mb-2;
+    letter-spacing: 0.15em;
+  }
+  
+  .vision-subtitle {
+    @apply text-sm font-light text-text-secondary;
+    letter-spacing: 0.1em;
+  }
+  
+  .vision-result-number {
+    @apply text-2xl font-light text-text mb-1;
+    letter-spacing: 0.05em;
+  }
+  
+  .vision-result-subject {
+    @apply text-sm font-light text-text-secondary mb-3;
+    letter-spacing: 0.08em;
+  }
+  
+  .vision-result-preview {
+    @apply text-xs font-light text-text-tertiary line-clamp-2;
+    letter-spacing: 0.03em;
+  }
 }
