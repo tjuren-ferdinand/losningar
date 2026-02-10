@@ -23,13 +23,13 @@ const VisionResults: React.FC<VisionResultsProps> = ({ solutions, onSolutionClic
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
                 <div className="vision-result-number">
-                  Uppgift {solution.id}
+                  {solution.title}
                 </div>
                 <div className="vision-result-subject">
                   {solution.subject}
                 </div>
                 <div className="vision-result-preview">
-                  {solution.title}
+                  {solution.category} • {solution.chapter}
                 </div>
               </div>
               <div className="ml-4 flex-shrink-0">
