@@ -13,7 +13,6 @@ function App() {
   const [selectedSolution, setSelectedSolution] = useState<Solution | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
-  const [_solutions, setSolutions] = useState<Solution[]>([]);
   const [filteredSolutions, setFilteredSolutions] = useState<Solution[]>([]);
   const [activeSubject, setActiveSubject] = useState<string | null>('Alla');
   const [showResults, setShowResults] = useState(false);
@@ -47,7 +46,6 @@ function App() {
     try {
       setLoading(true);
       const data = await solutionService.getAllSolutions();
-      setSolutions(data);
       setFilteredSolutions(data);
     } catch (error) {
       console.error('Error loading solutions:', error);
