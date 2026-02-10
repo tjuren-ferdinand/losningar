@@ -6,17 +6,6 @@ export interface CourseCategory {
 
 export const courseStructure: CourseCategory[] = [
   {
-    subject: 'Mathematics',
-    name: 'Matematik Origo 4',
-    chapters: [
-      'Kap 1: Komplexa tal',
-      'Kap 2: Derivator och integraler',
-      'Kap 3: Derivator och grafer',
-      'Kap 4: Integraler',
-      'Kap 5: Differentialekvationer'
-    ]
-  },
-  {
     subject: 'Physics',
     name: 'Fysik Heureka 2',
     chapters: [

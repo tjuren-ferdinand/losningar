@@ -6,7 +6,7 @@ interface VisionNavProps {
 }
 
 const VisionNav: React.FC<VisionNavProps> = ({ activeSubject, onSubjectChange }) => {
-  const subjects = ['Alla', 'Matematik', 'Fysik'];
+  const subjects = ['Fysik'];
 
   return (
     <nav className="vision-nav animate-fade-in" aria-label="Ämnesfilter">

@@ -120,10 +120,7 @@ export const solutionService = {
 
     // Filtrera på ämne
     if (subject && subject !== 'Alla') {
-      supabaseQuery = supabaseQuery.eq(
-        'subject', 
-        subject === 'Matematik' ? 'Mathematics' : 'Physics'
-      )
+      supabaseQuery = supabaseQuery.eq('subject', 'Physics')
     }
 
     // Sökfråga

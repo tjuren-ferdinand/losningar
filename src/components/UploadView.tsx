@@ -20,7 +20,7 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
   const [preview, setPreview] = useState<string>('');
   const [selectedFileName, setSelectedFileName] = useState<string>('');
   const [title, setTitle] = useState('');
-  const [subject, setSubject] = useState<'Physics' | 'Mathematics'>('Mathematics');
+  const [subject] = useState<'Physics'>('Physics');
   const [category, setCategory] = useState('');
   const [chapter, setChapter] = useState('');
   const [isUploading, setIsUploading] = useState(false);
@@ -213,18 +213,9 @@ const UploadView: React.FC<UploadViewProps> = ({ onClose, onUpload }) => {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-light text-text-secondary mb-3 tracking-wide">Ämne</label>
-            <select
-              value={subject}
-              onChange={(e) => {
-                setSubject(e.target.value as 'Physics' | 'Mathematics');
-                setCategory('');
-                setChapter('');
-              }}
-              className="w-full px-6 py-4 bg-white/30 backdrop-blur-xl border border-border/50 rounded-2xl focus:outline-none focus:bg-white/40 transition-all font-light tracking-wide"
-            >
-              <option value="Mathematics">Matematik</option>
-              <option value="Physics">Fysik</option>
-            </select>
+            <div className="w-full px-6 py-4 bg-white/30 backdrop-blur-xl border border-border/50 rounded-2xl text-sm font-light text-text tracking-wide">
+              Fysik
+            </div>
           </div>
 
           <div>
