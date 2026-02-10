@@ -49,6 +49,8 @@
     @apply fixed bottom-8 left-1/2 -translate-x-1/2 bg-white/40 backdrop-blur-2xl 
            rounded-full shadow-vision px-8 py-4 flex items-center gap-8
            border border-border/50;
+    z-index: 60;
+    pointer-events: auto;
   }
   
   .vision-nav-item {

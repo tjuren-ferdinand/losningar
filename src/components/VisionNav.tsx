@@ -9,17 +9,18 @@ const VisionNav: React.FC<VisionNavProps> = ({ activeSubject, onSubjectChange })
   const subjects = ['Alla', 'Matematik', 'Fysik'];
 
   return (
-    <nav className="vision-nav animate-fade-in">
+    <nav className="vision-nav animate-fade-in" aria-label="Ämnesfilter">
       {subjects.map((subject) => (
-        <div
+        <button
           key={subject}
+          type="button"
           onClick={() => onSubjectChange(subject)}
           className={`vision-nav-item ${
             activeSubject === subject ? 'active' : ''
           }`}
         >
           {subject}
-        </div>
+        </button>
       ))}
     </nav>
   );

@@ -16,6 +16,7 @@ function App() {
   const [filteredSolutions, setFilteredSolutions] = useState<Solution[]>([]);
   const [activeSubject, setActiveSubject] = useState<string | null>('Alla');
   const [showResults, setShowResults] = useState(false);
+  const [isBrowsingSubject, setIsBrowsingSubject] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Hämta alla lösningar vid start
@@ -76,16 +77,19 @@ function App() {
     setSelectedSolution(solution);
     setIsModalOpen(true);
     setShowResults(false);
+    setIsBrowsingSubject(false);
   };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+    setIsBrowsingSubject(false);
   };
 
   const handleSubjectChange = (subject: string) => {
     setActiveSubject(subject);
     setSearchQuery('');
     setShowResults(false);
+    setIsBrowsingSubject(true);
   };
 
   const handleUpload = async (data: any) => {
@@ -140,18 +144,25 @@ function App() {
 
         {/* Search Section */}
         <div className="w-full max-w-3xl relative animate-slide-up">
+          {(() => {
+            const shouldShowResults = showResults || isBrowsingSubject;
+            return (
+              <>
           <VisionSearch 
             onSearch={handleSearch} 
-            showResults={showResults}
+            showResults={shouldShowResults}
           />
           <VisionResults
             solutions={filteredSolutions}
             onSolutionClick={handleSolutionClick}
-            showResults={showResults}
+            showResults={shouldShowResults}
           />
+              </>
+            );
+          })()}
           
           {/* Show message when category is empty */}
-          {!showResults && activeSubject && activeSubject !== 'Alla' && filteredSolutions.length === 0 && !loading && (
+          {!showResults && !isBrowsingSubject && activeSubject && activeSubject !== 'Alla' && filteredSolutions.length === 0 && !loading && (
             <div className="mt-8 text-center animate-fade-in">
               <p className="vision-subtitle">
                 Inga {activeSubject.toLowerCase()} uppgifter än
